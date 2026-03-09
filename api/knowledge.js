@@ -1,10 +1,4 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
-
-const dbPath = path.resolve(__dirname, 'knowledge.db');
-const db = new sqlite3.Database(dbPath);
-
-const COLLEGE_KNOWLEDGE = `
+export const COLLEGE_KNOWLEDGE = `
 === COLLEGE OVERVIEW ===
 **Full Name:** S.E.A COLLEGE OF ENGINEERING & TECHNOLOGY
 **Part of:** South East Asian Education Trust, S.E.A Group of Institutions
@@ -376,17 +370,3 @@ SEACET is part of the larger S.E.A Group of Institutions which includes:
 - Industry-academia collaboration initiatives
 - Startup and entrepreneurship support
 `;
-
-db.serialize(() => {
-  db.run("CREATE TABLE IF NOT EXISTS knowledge (id INTEGER PRIMARY KEY, content TEXT)");
-  db.run("DELETE FROM knowledge"); // Clear old data if any
-  db.run("INSERT INTO knowledge (content) VALUES (?)", [COLLEGE_KNOWLEDGE], (err) => {
-    if (err) {
-      console.error("Error seeding database:", err.message);
-    } else {
-      console.log("Database seeded successfully with college knowledge.");
-    }
-  });
-});
-
-db.close();

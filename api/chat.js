@@ -1,34 +1,11 @@
-const express = require('express');
-const cors = require('cors');
-const sqlite3 = require('sqlite3').verbose();
-const Groq = require('groq-sdk');
-const dotenv = require('dotenv');
-const path = require('path');
+import Groq from 'groq-sdk';
+import { COLLEGE_KNOWLEDGE } from './knowledge.js';
 
-dotenv.config();
+export default async function handler(req, res) {
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method Not Allowed' });
+    }
 
-const app = express();
-const port = process.env.PORT || 3001;
-
-app.use(cors());
-app.use(express.json());
-
-const dbPath = path.resolve(__dirname, 'knowledge.db');
-const db = new sqlite3.Database(dbPath);
-
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
-// Helper to get knowledge from DB
-const getKnowledge = () => {
-    return new Promise((resolve, reject) => {
-        db.get("SELECT content FROM knowledge LIMIT 1", (err, row) => {
-            if (err) reject(err);
-            else resolve(row ? row.content : '');
-        });
-    });
-};
-
-app.post('/api/chat', async (req, res) => {
     try {
         const { messages } = req.body;
 
@@ -42,15 +19,12 @@ app.post('/api/chat', async (req, res) => {
             return res.status(500).json({ error: "Server Configuration Error: GROQ_API_KEY is missing." });
         }
 
-        console.log("--- New Chat Request (Groq/Llama 3) ---");
-        console.log("Fetching knowledge from database...");
-        const knowledge = await getKnowledge();
+        const groq = new Groq({ apiKey });
 
-        console.log("Preparing messages for Groq...");
         const groqMessages = [
             {
                 role: "system",
-                content: knowledge
+                content: COLLEGE_KNOWLEDGE
             },
             ...messages.map(msg => ({
                 role: msg.role === "assistant" ? "assistant" : "user",
@@ -58,8 +32,7 @@ app.post('/api/chat', async (req, res) => {
             }))
         ];
 
-        console.log(`Sending request to Groq (Llama 3, message count: ${groqMessages.length})`);
-
+        // Set response headers for streaming
         res.setHeader('Content-Type', 'text/event-stream');
         res.setHeader('Cache-Control', 'no-cache');
         res.setHeader('Connection', 'keep-alive');
@@ -88,33 +61,19 @@ app.post('/api/chat', async (req, res) => {
 
         res.write("data: [DONE]\n\n");
         res.end();
-        console.log("--- Request Completed Successfully ---");
 
     } catch (error) {
-        console.error("--- Chat Error Details ---");
-        console.error("Error Name:", error.name);
-        console.error("Status Text:", error.statusText);
-        console.error("Error Message:", error.message);
+        console.error("--- API Error Details ---");
+        console.error(error);
 
-        // If the response headers haven't been sent yet, send a 500 error
         if (!res.headersSent) {
             res.status(500).json({
                 error: "AI Service Error",
-                details: error.message,
-                suggestion: "Please check your API key and internet connection."
+                details: error.message
             });
         } else {
-            // If we're already streaming, just end the stream with an error
             res.write(`data: ${JSON.stringify({ error: "Stream interrupted", details: error.message })}\n\n`);
             res.end();
         }
     }
-});
-
-app.get('/health', (req, res) => {
-    res.json({ status: "ok", message: "Server is reachable" });
-});
-
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
+}
