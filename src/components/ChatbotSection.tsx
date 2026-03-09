@@ -36,7 +36,7 @@ export const ChatbotSection = () => {
     setIsLoading(true);
 
     try {
-      const CHAT_URL = `http://localhost:3001/api/chat`;
+      const CHAT_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/chat`;
 
       const response = await fetch(CHAT_URL, {
         method: "POST",
