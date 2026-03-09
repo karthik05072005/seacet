@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* SEACET Brand Colors */
+    --background: 210 50% 98%;
+    --foreground: 215 25% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 15%;
+
+    /* Primary: SEACET Red */
+    --primary: 356 85% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary: Navy Blue */
+    --secondary: 215 45% 20%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Accent: Gold */
+    --accent: 43 95% 58%;
+    --accent-foreground: 215 45% 20%;
+
+    --muted: 215 20% 92%;
+    --muted-foreground: 215 15% 45%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 215 20% 88%;
+    --input: 215 20% 88%;
+    --ring: 356 85% 50%;
+
+    --radius: 0.75rem;
+    
+    /* Custom SEACET tokens */
+    --seacet-navy: 215 45% 20%;
+    --seacet-navy-dark: 215 45% 12%;
+    --seacet-red: 356 85% 50%;
+    --seacet-gold: 43 95% 58%;
+    --seacet-gold-light: 43 95% 68%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--seacet-navy-dark)), hsl(var(--seacet-navy)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--seacet-red)), hsl(var(--seacet-gold)));
+    
+    /* Shadows */
+    --shadow-elevated: 0 10px 40px -10px hsl(var(--seacet-navy) / 0.3);
+    --shadow-glow: 0 0 30px hsl(var(--seacet-red) / 0.2);
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 215 45% 12%;
+    --foreground: 0 0% 98%;
+
+    --card: 215 45% 16%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 215 45% 16%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 356 85% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 215 45% 20%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 215 30% 25%;
+    --muted-foreground: 215 15% 70%;
+
+    --accent: 43 95% 58%;
+    --accent-foreground: 215 45% 12%;
+
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 215 30% 25%;
+    --input: 215 30% 25%;
+    --ring: 356 85% 50%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
